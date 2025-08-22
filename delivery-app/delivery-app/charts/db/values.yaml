@@ -1,0 +1,46 @@
+replicaCount: 1
+
+image:
+  repository: mysql
+  tag: "8.0"
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+db:
+  secretName: delivery-db-secret
+  hostKey: host
+  portKey: port
+  userKey: dbUser
+  passwordKey: dbPassword
+  nameKey: dbName
+
+secret:
+  name: delivery-db-secret
+  host: delivery-bd-service
+  port: "3306"
+  dbName: delivery
+  dbUser: user
+  dbPassword: pass
+  rootPassword: root
+
+persistence:
+    enabled: true
+    name: mysql-pvc-delivery
+    size: 1Gi
+    mountPath: /var/lib/mysql
+    storageClass: do-block-storage
+    accessModes:
+      - ReadWriteOnce
+service:
+  name: delivery-bd-service
+  port: "3306"
+  targetPort: 3306
+  type: ClusterIP    
+
+

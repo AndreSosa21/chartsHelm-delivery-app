@@ -1,0 +1,25 @@
+app:
+  name: delivery
+  image:
+    repository: andrea233/delivery-system
+    tag: "2.5.0"
+  replicas: 2
+  port: 3000
+  
+  service:
+    port: 80
+  
+  ingress:
+    enabled: true
+    className: nginx
+    apiPath: /api(/|$)(.*)
+    frontendPath: /delivery(/|$)(.*)  
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "500Mi"
+
+db:
+  enabled: true
+  secretName: delivery-db-secret
+  pvcName: mysql-pvc-delivery

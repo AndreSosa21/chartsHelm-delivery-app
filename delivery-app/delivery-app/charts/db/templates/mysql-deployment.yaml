@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "db.fullname" . }}
+  labels:
+    app: {{ include "db.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "db.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "db.name" . }}
+    spec:
+      containers:
+      - name: mysql-db
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+                key: MYSQL_ROOT_PASSWORD
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+                key: DB_NAME
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+                key: DB_USER
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+                key: DB_PASSWORD
+        volumeMounts:
+          - name: mysql-persistent-storage
+            mountPath: {{ .Values.persistence.mountPath }}
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        startupProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.claimName | default "mysql-pvc-delivery" }}

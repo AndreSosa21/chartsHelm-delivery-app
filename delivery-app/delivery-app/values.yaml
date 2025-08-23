@@ -18,8 +18,38 @@ app:
     requests:
       cpu: "100m"
       memory: "500Mi"
+global:
+  db:
+    enabled: true
+    secretName: delivery-db-secret
+    pvcName: mysql-pvc-delivery
 
-db:
-  enabled: true
-  secretName: delivery-db-secret
-  pvcName: mysql-pvc-delivery
+    image:
+      repository: mysql
+      tag: "8.0"
+
+    configMap:
+      name: delivery-db-config
+      host: delivery-db-service
+      port: "3306"
+      dbName: delivery
+
+    secret:
+      dbUser: user
+      dbPassword: pass
+      rootPassword: root
+
+    persistence:
+      enabled: true
+      name: mysql-pvc-delivery
+      size: 1Gi
+      mountPath: /var/lib/mysql
+      storageClass: do-block-storage
+      accessModes:
+        - ReadWriteOnce
+
+    service:
+      name: delivery-db-service
+      port: "3306"
+      targetPort: 3306
+      type: ClusterIP

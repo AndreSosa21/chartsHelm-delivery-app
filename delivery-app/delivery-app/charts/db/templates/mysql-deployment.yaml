@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ include "db.name" . }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.global.db.replicaCount | default 1 }}
   selector:
     matchLabels:
       app: {{ include "db.name" . }}
@@ -16,33 +16,36 @@ spec:
     spec:
       containers:
       - name: mysql-db
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: "{{ .Values.global.db.image.repository }}:{{ .Values.global.db.image.tag }}"
         ports:
         - containerPort: 3306
         env:
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+                name: {{ .Values.global.db.secretName }}
                 key: MYSQL_ROOT_PASSWORD
+          
           - name: MYSQL_DATABASE
             valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+              configMapKeyRef:
+                name: {{ .Values.global.db.configMap.name }}
                 key: DB_NAME
+          
+          
           - name: MYSQL_USER
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+                name: {{ .Values.global.db.secretName }}
                 key: DB_USER
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secretName | default .Values.secret.rootPassword | quote }}
+                name: {{ .Values.global.db.secretName }}
                 key: DB_PASSWORD
         volumeMounts:
           - name: mysql-persistent-storage
-            mountPath: {{ .Values.persistence.mountPath }}
+            mountPath: {{ .Values.global.db.persistence.mountPath }}
         readinessProbe:
           tcpSocket:
             port: 3306
@@ -56,4 +59,4 @@ spec:
       volumes:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.claimName | default "mysql-pvc-delivery" }}
+            claimName: {{ .Values.global.db.persistence.name | default "mysql-pvc-delivery" }}

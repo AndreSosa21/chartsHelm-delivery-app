@@ -1,12 +1,12 @@
-{{- if .Values.persistence.enabled }}
+{{- if .Values.global.db.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.persistence.name }}
+  name: {{ .Values.global.db.persistence.name }}
 spec:
-  accessModes: {{ toYaml .Values.persistence.accessModes | nindent 2 }}
+  accessModes: {{ toYaml .Values.global.db.persistence.accessModes | nindent 2 }}
   resources:
     requests:
-      storage: {{ .Values.persistence.size }}
-  storageClassName: {{ .Values.persistence.storageClass }}
+      storage: {{ .Values.global.db.persistence.size }}
+  storageClassName: {{ .Values.global.db.persistence.storageClass }}
 {{- end }}

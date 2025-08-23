@@ -9,8 +9,8 @@ entries:
     name: db
     type: application
     urls:
-    - charts/db-0.1.0.tgz
-    version: 0.1.0
+    - charts/db-0.1.1.tgz
+    version: 0.1.1
   delivery-app:
   - apiVersion: v2
     appVersion: 2.5.0
@@ -18,12 +18,12 @@ entries:
     dependencies:
     - name: db
       repository: file://charts/db
-      version: 0.1.0
+      version: 0.1.1
     description: Chart para la aplicación de gestión de pedidos (app + bd)
     digest: 8f026e8f595b204e61cbdeaf889bd1a8409ed68373acd4b6a8c4ee63466e948f
     name: delivery-app
     type: application
     urls:
-    - delivery-app-0.1.0.tgz
-    version: 0.1.0
+    - delivery-app-0.1.1.tgz
+    version: 0.1.1
 generated: "2025-08-22T16:26:06.1527337-05:00"

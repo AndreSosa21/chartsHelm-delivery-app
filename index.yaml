@@ -9,7 +9,7 @@ entries:
     name: db
     type: application
     urls:
-    - https://andresosa21.github.io/chartsHelm-delivery-app/db-0.1.1.tgz
+    - db-0.1.1.tgz
     version: 0.1.1
   delivery-app:
   - apiVersion: v2

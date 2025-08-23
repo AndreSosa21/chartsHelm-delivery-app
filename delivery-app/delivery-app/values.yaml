@@ -31,7 +31,6 @@ global:
     enabled: true
     secretName: delivery-db-secret
     pvcName: mysql-pvc-delivery
-    replicaCount: 2
 
     image:
       repository: mysql

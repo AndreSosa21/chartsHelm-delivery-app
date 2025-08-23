@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ include "db.name" . }}
 spec:
-  replicas: {{ .Values.global.db.replicaCount }}
+  replicas: 2
   selector:
     matchLabels:
       app: {{ include "db.name" . }}

@@ -4,7 +4,7 @@ app:
   image:
     repository: andrea233/delivery-system
     tag: "2.5.0"
-  replicas: 3
+  replicas: 4
   port: 3000
   
   service:
@@ -21,6 +21,12 @@ app:
       cpu: "100m"
       memory: "500Mi"
 global:
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "delivery-app"
+  annotations:
+    meta.helm.sh/release-name: "delivery-app"
+    meta.helm.sh/release-namespace: "delivery-app"
   db:
     enabled: true
     secretName: delivery-db-secret

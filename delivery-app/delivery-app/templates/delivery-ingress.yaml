@@ -8,23 +8,23 @@ metadata:
 spec:
   ingressClassName: {{ .Values.app.ingress.className }}
   rules:
-    - http:
-        paths:
-          # Backend API
-          - path: {{ .Values.app.ingress.apiPath }}
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ .Values.app.name }}
-                port:
-                  number: {{ .Values.app.service.port }}
-
-          # Frontend
-          - path: {{ .Values.app.ingress.frontendPath }}
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ .Values.app.name }}
-                port:
-                  number: {{ .Values.app.service.port }}
+      - http:
+          paths:
+            # Backend API
+            - path: {{ .Values.app.ingress.apiPath }}
+              pathType: ImplementationSpecific
+              backend:
+                service:
+                  name: {{ .Values.app.name }}
+                  port:
+                    number: {{ .Values.app.service.port }}
+  
+            # Frontend
+            - path: {{ .Values.app.ingress.frontendPath }}
+              pathType: ImplementationSpecific
+              backend:
+                service:
+                  name: {{ .Values.app.name }}
+                  port:
+                    number: {{ .Values.app.service.port }}
 {{- end }}

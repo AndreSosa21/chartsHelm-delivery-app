@@ -1,5 +1,6 @@
 app:
   name: delivery
+  namespace: delivery-app
   image:
     repository: andrea233/delivery-system
     tag: "2.5.0"
@@ -12,6 +13,7 @@ app:
   ingress:
     enabled: true
     className: nginx
+    host: "delivery-app.local"
     apiPath: /api(/|$)(.*)
     frontendPath: /delivery(/|$)(.*)  
   resources:

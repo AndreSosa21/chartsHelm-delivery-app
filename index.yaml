@@ -3,27 +3,27 @@ entries:
   db:
   - apiVersion: v2
     appVersion: "8.0"
-    created: "2025-08-22T16:26:06.1569241-05:00"
+    created: "2025-08-23T00:58:21.0000022-05:00"
     description: Subchart para la base de datos MySQL de delivery
-    digest: 6fea985ab4ea92f735c7826670faa81e8818f1678b3700105d2f40113a1ecd82
+    digest: c03e85806ebb39c44032b0491b7f40738a223732e3df1deae364b674f22b5c94
     name: db
     type: application
     urls:
-    - charts/db-0.1.1.tgz
+    - https://andresosa21.github.io/chartsHelm-delivery-app/db-0.1.1.tgz
     version: 0.1.1
   delivery-app:
   - apiVersion: v2
     appVersion: 2.5.0
-    created: "2025-08-22T16:26:06.1558949-05:00"
+    created: "2025-08-23T00:58:21.0062478-05:00"
     dependencies:
     - name: db
       repository: file://charts/db
       version: 0.1.1
     description: Chart para la aplicación de gestión de pedidos (app + bd)
-    digest: 8f026e8f595b204e61cbdeaf889bd1a8409ed68373acd4b6a8c4ee63466e948f
+    digest: ac48a33c9fb285089cc7d226e336bf3ba76d412eaea6937fa1c33cf505cf82e5
     name: delivery-app
     type: application
     urls:
-    - delivery-app-0.1.1.tgz
+    - https://andresosa21.github.io/chartsHelm-delivery-app/delivery-app-0.1.1.tgz
     version: 0.1.1
-generated: "2025-08-22T16:26:06.1527337-05:00"
+generated: "2025-08-23T00:58:20.9945925-05:00"

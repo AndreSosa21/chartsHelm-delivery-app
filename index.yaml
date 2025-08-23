@@ -24,6 +24,6 @@ entries:
     name: delivery-app
     type: application
     urls:
-    - https://andresosa21.github.io/chartsHelm-delivery-app/delivery-app-0.1.1.tgz
+    - delivery-app-0.1.1.tgz
     version: 0.1.1
 generated: "2025-08-23T00:58:20.9945925-05:00"

@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim  # Tipo de recurso: Reclamo de Volumen Persistente
 metadata:
-  name: {{ .Values.global.db.persistence.name }}  # Nombre del PVC, tomado de los valores globales
+  name: {{ .Values.global.db.persistence.existingClaim | default "mysql-pvc-delivery" }}  # Nombre del PVC, tomado de los valores globales
 spec:
   accessModes: {{ toYaml .Values.global.db.persistence.accessModes | nindent 2 }}  # Modos de acceso (por ejemplo, ReadWriteOnce)
   resources:

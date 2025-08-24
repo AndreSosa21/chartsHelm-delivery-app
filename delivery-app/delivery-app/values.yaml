@@ -1,6 +1,6 @@
 app:
   name: delivery
-  namespace: delivery-app
+  namespace: delivery-app-dev
   image:
     repository: andrea233/delivery-system
     tag: "2.5.0"

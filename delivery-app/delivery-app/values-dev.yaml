@@ -6,24 +6,60 @@ app:
     tag: "latest"
   replicas: 2
   port: 3000
+
   service:
     port: 80
+
   ingress:
     enabled: true
     className: nginx
     host: "dev.delivery-app.local"
     apiPath: /api(/|$)(.*)
     frontendPath: /delivery(/|$)(.*)
+
   resources:
     requests:
       cpu: "100m"
       memory: "500Mi"
 
 global:
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "delivery-app"
+  annotations:
+    meta.helm.sh/release-name: "delivery-app"
+    meta.helm.sh/release-namespace: "delivery-app"
   db:
     enabled: true
-    host: delivery-db-service
-    port: "3306"
-    dbName: delivery
-    dbUser: user
-    dbPassword: pass
+    secretName: delivery-db-secret
+    pvcName: mysql-pvc-delivery
+
+    image:
+      repository: mysql
+      tag: "8.0"
+
+    configMap:
+      name: delivery-db-config
+      host: delivery-db-service.delivery-app-dev.svc.cluster.local
+      port: "3306"
+      dbName: delivery
+
+    secret:
+      dbUser: user
+      dbPassword: pass
+      rootPassword: root
+
+    persistence:
+      enabled: true
+      existingClaim: mysql-pvc-delivery
+      size: 1Gi
+      mountPath: /var/lib/mysql
+      storageClass: do-block-storage
+      accessModes:
+        - ReadWriteOnce
+
+    service:
+      name: delivery-db-service
+      port: "3306"
+      targetPort: 3306
+      type: ClusterIP

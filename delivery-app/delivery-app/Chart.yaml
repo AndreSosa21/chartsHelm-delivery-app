@@ -1,9 +1,10 @@
-apiVersion: v2
-name: delivery-app
-description: Chart para la aplicación de gestión de pedidos (app + bd)
-type: application
-version: 0.1.1
-appVersion: "2.5.0"
+# ...existing code...
+apiVersion: v2  # Versión de la API de Helm para charts (v2 soporta charts modernos)
+name: delivery-app  # Nombre del chart principal que empaqueta la aplicación y sus subcharts
+description: Chart para la aplicación de gestión de pedidos (app + bd)  # Descripción breve del chart
+type: application  # Tipo de chart: 'application' despliega recursos en Kubernetes
+version: 0.1.1  # Versión del chart (semántica). Incrementar cuando se modifique el chart
+appVersion: "2.5.0"  # Versión de la aplicación incluida (informativa, p. ej. tag de la imagen)
 
 # Dependencias (subcharts) que Helm instalará junto con este chart
 dependencies:

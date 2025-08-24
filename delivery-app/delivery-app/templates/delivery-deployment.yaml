@@ -75,4 +75,4 @@ spec:
           readinessProbe:
             httpGet:
               path: /api/users   # Ruta usada para determinar si la app está lista para recibir tráfico
-              port: {{ .Values.app.port
+              port: {{ .Values.app.port }}

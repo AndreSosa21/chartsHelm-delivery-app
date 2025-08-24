@@ -4,7 +4,7 @@ app:
   image:
     repository: andrea233/delivery-system
     tag: "2.5.0"
-  replicas: 3
+  replicas: 4
   port: 3000
   
   service:
@@ -49,7 +49,6 @@ global:
 
     persistence:
       enabled: true
-      name: mysql-pvc-delivery
       existingClaim: mysql-pvc-delivery
       size: 1Gi
       mountPath: /var/lib/mysql

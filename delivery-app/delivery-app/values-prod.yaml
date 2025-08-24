@@ -1,0 +1,22 @@
+app:
+  name: delivery
+  namespace: delivery-app-prod
+  image:
+    repository: andrea233/delivery-system
+    tag: "2.5.0"
+  replicas: 4
+  port: 3000
+  service:
+    port: 80
+  ingress:
+    enabled: true
+    className: nginx
+    host: "delivery-app.local"
+    apiPath: /api(/|$)(.*)
+    frontendPath: /delivery(/|$)(.*)
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "1Gi"
+
+global: {}

@@ -19,4 +19,11 @@ app:
       cpu: "100m"
       memory: "500Mi"
 
-global: {}
+global:
+  db:
+    enabled: true
+    host: delivery-db-service
+    port: "3306"
+    dbName: delivery
+    dbUser: user
+    dbPassword: pass

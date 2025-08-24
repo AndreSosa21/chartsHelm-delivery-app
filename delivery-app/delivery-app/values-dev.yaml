@@ -1,61 +1,31 @@
+# ...existing code...
 # Valores específicos para el entorno de desarrollo (overrides para Helm)
 app:
-  name: delivery                # Nombre de la aplicación / etiqueta usada en recursos Kubernetes
-  namespace: delivery-app-dev   # Namespace donde se desplegará la aplicación en el clúster de desarrollo
+  name: delivery                         # Nombre de la aplicación / etiqueta usada en recursos Kubernetes
+  namespace: delivery-app-dev            # Namespace donde se desplegará en desarrollo
   image:
-    repository: andrea233/delivery-system  # Repositorio de la imagen Docker de la aplicación
-    tag: "latest"               # Tag de la imagen a usar en desarrollo
-  replicas: 2                   # Número de réplicas del Deployment en dev
-  port: 3000                    # Puerto en el contenedor donde escucha la aplicación
+    repository: andrea233/delivery-system # Repositorio de la imagen Docker de la aplicación
+    tag: "latest"                        # Tag de la imagen a usar en desarrollo
+  replicas: 2                            # Número de réplicas del Deployment en dev
+  port: 3000                             # Puerto interno donde escucha la aplicación en el contenedor
   service:
-    port: 80                    # Puerto expuesto por el Service dentro del clúster
+    port: 80                             # Puerto expuesto por el Service dentro del clúster
   ingress:
-    enabled: true               # Habilita la creación del Ingress para acceso HTTP externo/enrutamiento
-    className: nginx            # Clase de Ingress (por ejemplo, "nginx" para nginx-ingress)
-    host: "dev.delivery-app.local"  # Dominio que atenderá el Ingress en desarrollo (hosts locales/archivo /etc/hosts)
-    apiPath: /api(/|$)(.*)      # Ruta (regex) para redirigir tráfico API al backend
-    frontendPath: /delivery(/|$)(.*)  # Ruta (regex) para redirigir tráfico del frontend
+    enabled: true                        # Habilita la creación del Ingress en entorno dev
+    className: nginx                     # Clase/controlador de Ingress a usar (ej. nginx)
+    host: "dev.delivery-app.local"       # Dominio/host que atenderá el Ingress en dev (configurar /etc/hosts o DNS)
+    apiPath: /api(/|$)(.*)               # Ruta/regex para enrutar tráfico a la API del backend
+    frontendPath: /delivery(/|$)(.*)     # Ruta/regex para enrutar tráfico al frontend
   resources:
     requests:
-      cpu: "100m"               # CPU solicitado para cada pod (reserva mínima)
-      memory: "500Mi"           # Memoria solicitada para cada pod
+      cpu: "100m"                        # CPU solicitado por pod (reserva mínima para scheduler)
+      memory: "500Mi"                    # Memoria solicitada por pod (reserva mínima)
 
 global:
   db:
-    enabled: true              # Habilita despliegue/uso del subchart de base de datos
-    host: delivery-db-service  # Host/Service name donde se encontrará MySQL dentro del clúster
-    port: "3306"               # Puerto de MySQL (nota: como string para consistencia con plantillas)
-    dbName: delivery           # Nombre de la base de datos a crear/usar
-    dbUser: user               # Usuario de la base de datos (valor por defecto en dev)
-    dbPassword: pass           # Contraseña del usuario (solo para dev; use secrets/secure vault en producción)
-```# filepath: c:\Users\rodri\Desktop\U\2025\2025-2\Patrones\chartsHelm-delivery-app\delivery-app\delivery-app\values-dev.yaml
-# Valores específicos para el entorno de desarrollo (overrides para Helm)
-app:
-  name: delivery                # Nombre de la aplicación / etiqueta usada en recursos Kubernetes
-  namespace: delivery-app-dev   # Namespace donde se desplegará la aplicación en el clúster de desarrollo
-  image:
-    repository: andrea233/delivery-system  # Repositorio de la imagen Docker de la aplicación
-    tag: "latest"               # Tag de la imagen a usar en desarrollo
-  replicas: 2                   # Número de réplicas del Deployment en dev
-  port: 3000                    # Puerto en el contenedor donde escucha la aplicación
-  service:
-    port: 80                    # Puerto expuesto por el Service dentro del clúster
-  ingress:
-    enabled: true               # Habilita la creación del Ingress para acceso HTTP externo/enrutamiento
-    className: nginx            # Clase de Ingress (por ejemplo, "nginx" para nginx-ingress)
-    host: "dev.delivery-app.local"  # Dominio que atenderá el Ingress en desarrollo (hosts locales/archivo /etc/hosts)
-    apiPath: /api(/|$)(.*)      # Ruta (regex) para redirigir tráfico API al backend
-    frontendPath: /delivery(/|$)(.*)  # Ruta (regex) para redirigir tráfico del frontend
-  resources:
-    requests:
-      cpu: "100m"               # CPU solicitado para cada pod (reserva mínima)
-      memory: "500Mi"           # Memoria solicitada para cada pod
-
-global:
-  db:
-    enabled: true              # Habilita despliegue/uso del subchart de base de datos
-    host: delivery-db-service  # Host/Service name donde se encontrará MySQL dentro del clúster
-    port: "3306"               # Puerto de MySQL (nota: como string para consistencia con plantillas)
-    dbName: delivery           # Nombre de la base de datos a crear/usar
-    dbUser: user               # Usuario de la base de datos (valor por defecto en dev)
-    dbPassword: pass           # Contraseña del usuario (solo para dev; use secrets/secure vault en
+    enabled: true                        # Habilita el subchart/recursos de la base de datos en dev
+    host: delivery-db-service            # Host/Service name donde se resolverá MySQL dentro del clúster
+    port: "3306"                         # Puerto de MySQL (como string para consistencia con plantillas)
+    dbName: delivery                     # Nombre de la base de datos a crear/usarse
+    dbUser: user                         # Usuario por defecto para la base de datos (solo para dev)
+    dbPassword: pass                     # Contraseña del usuario (no usar en texto plano en entornos reales)

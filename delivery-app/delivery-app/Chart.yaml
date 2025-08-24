@@ -11,7 +11,7 @@ description: Chart para la aplicación de gestión de pedidos (app + bd)
 type: application
 
 # Versión del chart (semántica) — incrementar cuando se modifiquen plantillas/valores
-version: 0.1.4
+version: 0.1.5
 
 # Versión de la aplicación incluida (informativa, p. ej. tag de la imagen)
 appVersion: "2.5.0"

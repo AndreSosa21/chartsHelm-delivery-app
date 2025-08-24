@@ -19,7 +19,7 @@ metadata:
 spec:
   ingressClassName: {{ .Values.app.ingress.className }}  # Clase de Ingress a usar (p. ej. "nginx")
   rules:
-    - http:
+      - http:
           paths:
             # Backend API
             - path: {{ .Values.app.ingress.apiPath }}  # Ruta para la API (p. ej. /api(/|$)(.*))

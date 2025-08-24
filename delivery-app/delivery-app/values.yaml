@@ -1,7 +1,7 @@
 # Valores por defecto del chart (pueden ser sobreescritos con values-dev.yaml / values-prod.yaml)
 app:
-  name: delivery                           # Nombre de la aplicación (usado en recursos Kubernetes)
-  namespace: delivery-app-dev              # Namespace por defecto donde se desplegará
+  name: delivery
+  namespace: delivery-app
   image:
     repository: andrea233/delivery-system  # Repositorio/imagen Docker de la aplicación
     tag: "2.5.0"                           # Tag de la imagen a usar
@@ -12,11 +12,10 @@ app:
     port: 80                               # Puerto que expondrá el Service dentro del clúster
   
   ingress:
-    enabled: true                          # Habilita la creación del Ingress (true/false)
-    className: nginx                       # Clase/controlador de Ingress a usar (ej. nginx)
-    host: "delivery-app.local"             # Dominio/host que atenderá el Ingress
-    apiPath: /api(/|$)(.*)                 # Ruta/regex para enrutar tráfico a la API del backend
-    frontendPath: /delivery(/|$)(.*)       # Ruta/regex para enrutar tráfico al frontend  
+    enabled: true
+    className: nginx
+    apiPath: /api(/|$)(.*)
+    frontendPath: /delivery(/|$)(.*)  
   resources:
     requests:
       cpu: "100m"                          # CPU solicitado por pod (reserva mínima para scheduler)
@@ -59,73 +58,7 @@ global:
         - ReadWriteOnce                    # Modo de acceso del volumen
 
     service:
-      name: delivery-db-service            # Nombre del Service que expone MySQL dentro del clúster
-      port: "3306"                         # Puerto expuesto por el Service (string para consistencia)
-      targetPort: 3306                     # Puerto dentro del contenedor al que apunta el Service
-      type: ClusterIP                      # Tipo de Service (ClusterIP, NodePort, LoadBalancer)
-# ...existing code...
-
-# Valores por defecto del chart (pueden ser sobreescritos con values-dev.yaml / values-prod.yaml)
-app:
-  name: delivery                           # Nombre de la aplicación (usado en recursos Kubernetes)
-  namespace: delivery-app-dev              # Namespace por defecto donde se desplegará
-  image:
-    repository: andrea233/delivery-system  # Repositorio/imagen Docker de la aplicación
-    tag: "2.5.0"                           # Tag de la imagen a usar
-  replicas: 4                              # Número de réplicas del Deployment por defecto
-  port: 3000                               # Puerto interno donde escucha la aplicación
-  
-  service:
-    port: 80                               # Puerto que expondrá el Service dentro del clúster
-  
-  ingress:
-    enabled: true                          # Habilita la creación del Ingress (true/false)
-    className: nginx                       # Clase/controlador de Ingress a usar (ej. nginx)
-    apiPath: /api(/|$)(.*)                 # Ruta/regex para enrutar tráfico a la API del backend
-    frontendPath: /delivery(/|$)(.*)       # Ruta/regex para enrutar tráfico al frontend  
-  resources:
-    requests:
-      cpu: "100m"                          # CPU solicitado por pod (reserva mínima para scheduler)
-      memory: "500Mi"                      # Memoria solicitada por pod
-
-global:
-  labels:
-    app.kubernetes.io/managed-by: "Helm"   # Etiqueta estándar que indica el gestor del recurso
-    app.kubernetes.io/name: "delivery-app" # Etiqueta con el nombre lógico de la aplicación
-  annotations:
-    meta.helm.sh/release-name: "delivery-app"       # Anotación con el nombre del release de Helm
-    meta.helm.sh/release-namespace: "delivery-app"  # Anotación con el namespace del release
-  db:
-    enabled: true                          # Habilita el subchart/recursos de la base de datos
-    secretName: delivery-db-secret         # Nombre del Secret que contendrá credenciales de DB
-    pvcName: mysql-pvc-delivery            # Nombre sugerido para el PVC (si se crea)
-
-    image:
-      repository: mysql                    # Imagen utilizada para la base de datos (MySQL)
-      tag: "8.0"                           # Tag/versión de la imagen MySQL
-
-    configMap:
-      name: delivery-db-config             # Nombre del ConfigMap con parámetros de conexión
-      host: delivery-db-service            # Host/Service name donde se resolverá la BD dentro del clúster
-      port: "3306"                         # Puerto de MySQL (como string para consistencia con plantillas)
-      dbName: delivery                     # Nombre de la base de datos a crear/usarse
-
-    secret:
-      dbUser: user                         # Usuario por defecto para la base de datos (dev)
-      dbPassword: pass                     # Contraseña del usuario (no usar en texto plano en prod)
-      rootPassword: root                   # Contraseña root de MySQL (proteger en producción)
-
-    persistence:
-      enabled: true                        # Habilita almacenamiento persistente para MySQL
-      existingClaim: mysql-pvc-delivery    # Si existe un PVC, usarlo (nombre); si no, crear uno
-      size: 1Gi                            # Tamaño solicitado si se crea un PVC
-      mountPath: /var/lib/mysql            # Ruta dentro del contenedor donde se monta el volumen
-      storageClass: do-block-storage       # StorageClass a usar (ajustar según proveedor)
-      accessModes:
-        - ReadWriteOnce                    # Modo de acceso del volumen
-
-    service:
-      name: delivery-db-service            # Nombre del Service que expone MySQL dentro del clúster
-      port: "3306"                         # Puerto expuesto por el Service (string para consistencia)
-      targetPort: 3306                     # Puerto dentro del contenedor al que apunta el Service
-      type: ClusterIP                      # Tipo de Service (ClusterIP, NodePort, LoadBalancer)
+      name: delivery-db-service
+      port: 3306
+      targetPort: 3306
+      type: ClusterIP

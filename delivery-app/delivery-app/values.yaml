@@ -64,7 +64,7 @@ global:
       targetPort: 3306                     # Puerto dentro del contenedor al que apunta el Service
       type: ClusterIP                      # Tipo de Service (ClusterIP, NodePort, LoadBalancer)
 # ...existing code...
-```# filepath: c:\Users\rodri\Desktop\U\2025\2025-2\Patrones\chartsHelm-delivery-app\delivery-app\delivery-app\values.yaml
+
 # Valores por defecto del chart (pueden ser sobreescritos con values-dev.yaml / values-prod.yaml)
 app:
   name: delivery                           # Nombre de la aplicación (usado en recursos Kubernetes)

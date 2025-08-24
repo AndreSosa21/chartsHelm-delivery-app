@@ -1,13 +1,23 @@
-# ...existing code...
-apiVersion: v2  # Versión de la API de Helm para charts (v2 soporta charts modernos)
-name: delivery-app  # Nombre del chart principal que empaqueta la aplicación y sus subcharts
-description: Chart para la aplicación de gestión de pedidos (app + bd)  # Descripción breve del chart
-type: application  # Tipo de chart: 'application' despliega recursos en Kubernetes
-version: 0.1.1  # Versión del chart (semántica). Incrementar cuando se modifique el chart
-appVersion: "2.5.0"  # Versión de la aplicación incluida (informativa, p. ej. tag de la imagen)
+# Versión de la API de Helm para este chart (v2 soporta charts modernos)
+apiVersion: v2
+
+# Nombre del chart principal (usado al empaquetar e instalar)
+name: delivery-app
+
+# Descripción breve del chart
+description: Chart para la aplicación de gestión de pedidos (app + bd)
+
+# Tipo de chart: 'application' indica que despliega recursos en Kubernetes
+type: application
+
+# Versión del chart (semántica) — incrementar cuando se modifiquen plantillas/valores
+version: 0.1.1
+
+# Versión de la aplicación incluida (informativa, p. ej. tag de la imagen)
+appVersion: "2.5.0"
 
 # Dependencias (subcharts) que Helm instalará junto con este chart
 dependencies:
-  - name: db  # Nombre del subchart que proporciona la base de datos MySQL
-    version: 0.1.1  # Versión del subchart esperado
-    repository: "file://charts/db"  # Ubicación del subchart (ruta local dentro del paquete)
+  - name: db                     # Nombre del subchart que proporciona la base de datos MySQL
+    version: 0.1.1               # Versión del subchart requerida
+    repository: "file://charts/db"  # Ruta local al subchart

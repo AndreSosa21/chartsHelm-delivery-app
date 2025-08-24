@@ -13,7 +13,6 @@ app:
   ingress:
     enabled: true
     className: nginx
-    host: "delivery-app.local"
     apiPath: /api(/|$)(.*)
     frontendPath: /delivery(/|$)(.*)  
   resources:

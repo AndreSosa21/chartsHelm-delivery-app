@@ -1,14 +1,16 @@
-apiVersion: v1
-kind: Service
+# ...existing code...
+# Servicio Kubernetes que expone el pod de MySQL dentro del clúster (o externamente según type)
+apiVersion: v1  # Versión de la API de Kubernetes para Services
+kind: Service   # Tipo de recurso: Service
 metadata:
-  name: {{ .Values.global.db.service.name }}
+  name: {{ .Values.global.db.service.name }}  # Nombre del Service (provisto desde values.yaml)
   labels:
-    app: {{ include "db.name" . }}
+    app: {{ include "db.name" . }}  # Etiqueta para identificar la aplicación asociada
 spec:
   selector:
-    app: {{ include "db.name" . }}
+    app: {{ include "db.name" . }}  # Selecciona los pods con esta etiqueta (apunta al Deployment de MySQL)
   ports:
-    - protocol: TCP
-      port: {{ .Values.global.db.service.port }}
-      targetPort: {{ .Values.global.db.service.targetPort }}
-  type: {{ .Values.global.db.service.type }}
+    - protocol: TCP  # Protocolo de red usado (TCP para MySQL)
+      port: {{ .Values.global.db.service.port }}        # Puerto expuesto por el Service
+      targetPort: {{ .Values.global.db.service.targetPort }}  # Puerto en el contenedor al que se dirige el tráfico
+  type: {{ .Values.global.db.service.type }}  # Tipo de Service (ClusterIP, NodePort, LoadBalancer,

@@ -1,18 +1,23 @@
+# Versión de la API de Helm para el archivo index.yaml
 apiVersion: v1
+
+# Lista de charts disponibles en el repositorio
 entries:
   delivery-app:
-  - apiVersion: v2
-    appVersion: 2.5.0
-    created: "2025-08-23T17:34:27.0498229-05:00"
-    dependencies:
+  - apiVersion: v2  # Versión de la API del chart
+    appVersion: 2.5.0  # Versión de la aplicación que empaqueta el chart
+    created: "2025-08-23T17:34:27.0498229-05:00"  # Fecha de creación del chart
+    dependencies:  # Dependencias que requiere este chart
     - name: db
-      repository: file://charts/db
+      repository: file://charts/db  # Ubicación del chart dependiente (local)
       version: 0.1.1
-    description: Chart para la aplicación de gestión de pedidos (app + bd)
-    digest: 8e312f594bdb0512ff2ab94e2285333055fd097e5498aec9e9cec2da1e078018
-    name: delivery-app
-    type: application
+    description: Chart para la aplicación de gestión de pedidos (app + bd)  # Descripción del chart
+    digest: 8e312f594bdb0512ff2ab94e2285333055fd097e5498aec9e9cec2da1e078018  # Hash de integridad del chart
+    name: delivery-app  # Nombre del chart
+    type: application  # Tipo de chart (aplicación)
     urls:
-    - https://andresosa21.github.io/helm_delivery-app/delivery-app-0.1.1.tgz
-    version: 0.1.1
-generated: "2025-08-23T17:34:27.0455115-05:00"
+    - https://andresosa21.github.io/helm_delivery-app/delivery-app-0.1.1.tgz  # URL donde se encuentra el paquete del chart
+    version: 0.1.1  # Versión del chart
+
+# Fecha y hora en que se generó este archivo index.yaml
+generated: "2025-08-

@@ -1,40 +1,42 @@
-{{- if .Values.app.ingress.enabled }}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+{{- if .Values.app.ingress.enabled }}  # Solo crear el Ingress si la opción ingress.enabled está activada en values.yaml
+apiVersion: networking.k8s.io/v1  # Versión de la API para recursos Ingress modernos
+kind: Ingress  # Tipo de recurso: Ingress (controlador de entrada HTTP/S)
 metadata:
-  name: {{ .Values.app.name }}
-  namespace: {{ .Values.app.namespace }}
+  name: {{ .Values.app.name }}  # Nombre del recurso Ingress, normalmente igual al nombre de la app
+  namespace: {{ .Values.app.namespace }}  # Namespace donde se creará el Ingress
   labels:
     {{- with .Values.global.labels }}
-    {{ toYaml . | nindent 4 }}
+    {{ toYaml . | nindent 4 }}  # Etiquetas globales opcionales (se añaden al Ingress desde values)
     {{- end }}
   annotations:
     {{- with .Values.global.annotations }}
-    {{ toYaml . | nindent 4 }}
+    {{ toYaml . | nindent 4 }}  # Anotaciones globales opcionales (ej. configuración del controlador)
     {{- end }}
+  # Nota: existe otra clave `annotations:` más abajo con una regla específica de nginx.
+  # Tener dos secciones `annotations` en YAML sobrescribirá la anterior; conviene combinar anotaciones en una sola sección.
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$2  # Reescribe la ruta (útil para proxys y rutas con capture groups en path)
 spec:
-  ingressClassName: {{ .Values.app.ingress.className }}
+  ingressClassName: {{ .Values.app.ingress.className }}  # Clase de Ingress a usar (p. ej. "nginx")
   rules:
-    - host: {{ .Values.app.ingress.host }}
+    - host: {{ .Values.app.ingress.host }}  # Dominio que este Ingress atenderá
       http:
           paths:
             # Backend API
-            - path: {{ .Values.app.ingress.apiPath }}
-              pathType: ImplementationSpecific
+            - path: {{ .Values.app.ingress.apiPath }}  # Ruta para la API (p. ej. /api(/|$)(.*))
+              pathType: ImplementationSpecific  # Tipo de coincidencia de ruta (ImplementationSpecific, Prefix, Exact)
               backend:
                 service:
-                  name: {{ .Values.app.name }}
+                  name: {{ .Values.app.name }}  # Servicio backend al que enrutar (nombre del Service)
                   port:
-                    number: {{ .Values.app.service.port }}
+                    number: {{ .Values.app.service.port }}  # Puerto del Service backend para la API
   
             # Frontend
-            - path: {{ .Values.app.ingress.frontendPath }}
+            - path: {{ .Values.app.ingress.frontendPath }}  # Ruta para el frontend (p. ej. /(.*))
               pathType: ImplementationSpecific
               backend:
                 service:
-                  name: {{ .Values.app.name }}
+                  name: {{ .Values.app.name }}  # Mismo Service, diferentes rutas dirigidas al mismo backend
                   port:
                     number: {{ .Values.app.service.port }}
-{{- end }}
+{{- end }}  # Fin del condicional: no se renderiza nada si ingress.enabled es

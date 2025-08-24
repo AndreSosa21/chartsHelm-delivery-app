@@ -1,6 +1,17 @@
+# Versión de la API de Helm para este Chart (v2 permite charts modernos)
 apiVersion: v2
+
+# Nombre del chart (usado al empaquetar e instalar como subchart)
 name: db
+
+# Descripción breve del chart: indica que es el subchart para MySQL usado por delivery
 description: Subchart para la base de datos MySQL de delivery
+
+# Tipo de chart: 'application' indica que despliega una aplicación (no es un library chart)
 type: application
+
+# Versión del chart (semántica) — cambia cuando el chart se modifica
 version: 0.1.1
-appVersion: "8.0"
+
+# Versión de la aplicación que el chart instala (en este caso versión de MySQL)
+appVersion:

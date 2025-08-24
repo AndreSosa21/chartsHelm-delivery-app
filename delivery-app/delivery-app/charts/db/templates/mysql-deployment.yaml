@@ -1,62 +1,66 @@
+# Especifica la versión de la API y el tipo de recurso (Deployment de Kubernetes)
 apiVersion: apps/v1
 kind: Deployment
+
+# Metadatos del Deployment, incluyendo el nombre y etiquetas
 metadata:
   name: {{ include "db.fullname" . }}
   labels:
     app: {{ include "db.name" . }}
+
 spec:
-  replicas: 1
+  replicas: 1  # Número de réplicas del pod MySQL
   selector:
     matchLabels:
-      app: {{ include "db.name" . }}
+      app: {{ include "db.name" . }}  # Selector para identificar los pods gestionados
   template:
     metadata:
       labels:
-        app: {{ include "db.name" . }}
+        app: {{ include "db.name" . }}  # Etiquetas para los pods
     spec:
       containers:
-      - name: mysql-db
-        image: "{{ .Values.global.db.image.repository }}:{{ .Values.global.db.image.tag }}"
+      - name: mysql-db  # Nombre del contenedor
+        image: "{{ .Values.global.db.image.repository }}:{{ .Values.global.db.image.tag }}"  # Imagen de MySQL a usar
         ports:
-        - containerPort: 3306
+        - containerPort: 3306  # Puerto expuesto por el contenedor MySQL
         env:
+          # Variables de entorno para la configuración de MySQL
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.global.db.secretName }}
+                name: {{ .Values.global.db.secretName }}  # Nombre del Secret con la contraseña root
                 key: MYSQL_ROOT_PASSWORD
           
           - name: MYSQL_DATABASE
             valueFrom:
               configMapKeyRef:
-                name: {{ .Values.global.db.configMap.name }}
+                name: {{ .Values.global.db.configMap.name }}  # Nombre del ConfigMap con el nombre de la base de datos
                 key: DB_NAME
-          
           
           - name: MYSQL_USER
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.global.db.secretName }}
+                name: {{ .Values.global.db.secretName }}  # Nombre del Secret con el usuario
                 key: DB_USER
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.global.db.secretName }}
+                name: {{ .Values.global.db.secretName }}  # Nombre del Secret con la contraseña del usuario
                 key: DB_PASSWORD
         volumeMounts:
           - name: mysql-persistent-storage
-            mountPath: {{ .Values.global.db.persistence.mountPath }}
+            mountPath: {{ .Values.global.db.persistence.mountPath }}  # Ruta donde se monta el volumen persistente
         readinessProbe:
           tcpSocket:
-            port: 3306
+            port: 3306  # Prueba de disponibilidad usando el puerto 3306
           initialDelaySeconds: 10
           periodSeconds: 10
         startupProbe:
           tcpSocket:
-            port: 3306
+            port: 3306  # Prueba de inicio usando el puerto 3306
           initialDelaySeconds: 5
           periodSeconds: 10
       volumes:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
-            claimName: {{ .Values.global.db.persistence.name | default "mysql-pvc-delivery" }}
+            claimName: {{ .Values.global.db.persistence.name | default "mysql-pvc-delivery" }}  # Nombre del PVC

@@ -1,26 +1,31 @@
+# Define la versión de la API y el tipo de recurso (Deployment)
 apiVersion: apps/v1
 kind: Deployment
+
+# Metadatos del Deployment: nombre y namespace provistos por values.yaml
 metadata:
-  name: {{ .Values.app.name }}
-  namespace: {{ .Values.app.namespace }}
+  name: {{ .Values.app.name }}               # Nombre del deployment
+  namespace: {{ .Values.app.namespace }}     # Namespace donde se desplegará
   labels:
     {{- with .Values.global.labels }}
-    {{ toYaml . | nindent 4 }}
+    {{ toYaml . | nindent 4 }}               # Etiquetas globales opcionales (añadidas al metadata)
     {{- end }}
   annotations:
     {{- with .Values.global.annotations }}
-    {{ toYaml . | nindent 4 }}
+    {{ toYaml . | nindent 4 }}               # Anotaciones globales opcionales
     {{- end }}
+
 spec:
-  replicas: {{ .Values.app.replicas }}
+  replicas: {{ .Values.app.replicas }}       # Número de réplicas del pod de la aplicación
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
+      app: {{ .Values.app.name }}            # Selector para asociar pods al Deployment
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}
+        app: {{ .Values.app.name }}          # Etiqueta que debe coincidir con el selector
     spec:
+      # Init container que espera a que la base de datos esté disponible antes de iniciar la app
       initContainers:
         - name: wait-for-db
           image: busybox
@@ -34,36 +39,40 @@ spec:
                 sleep 2
               done
               echo "Database is up!"
+          # Explicación:
+          # usa busybox y netcat (nc) para comprobar conectividad TCP hacia la base de datos
+          # evita que la aplicación arranque hasta que el servicio de BD esté escuchando
+
       containers:
-        - name: {{ .Values.app.name }}
-          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        - name: {{ .Values.app.name }}         # Nombre del contenedor principal (la app)
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"  # Imagen de la app
           ports:
-            - containerPort: {{ .Values.app.port }}
+            - containerPort: {{ .Values.app.port }}  # Puerto donde la app escucha dentro del contenedor
           env:
             - name: DB_HOST
-              value: {{ .Values.global.db.configMap.host }}
+              value: {{ .Values.global.db.configMap.host }}    # Host de la BD desde ConfigMap
             - name: DB_PORT
-              value: {{ .Values.global.db.configMap.port }}
+              value: {{ .Values.global.db.configMap.port }}    # Puerto de la BD desde ConfigMap
             - name: DB_NAME
-              value: {{ .Values.global.db.configMap.dbName }}
+              value: {{ .Values.global.db.configMap.dbName }}  # Nombre de la BD desde ConfigMap
             - name: DB_USER
-              value: {{ .Values.global.db.secret.dbUser }}
+              value: {{ .Values.global.db.secret.dbUser }}     # Usuario DB desde Secret
             - name: DB_PASSWORD
-              value: {{ .Values.global.db.secret.dbPassword }}
+              value: {{ .Values.global.db.secret.dbPassword }} # Password DB desde Secret
             - name: MYSQL_ROOT_PASSWORD
-              value: {{ .Values.global.db.secret.rootPassword }}
+              value: {{ .Values.global.db.secret.rootPassword }} # Root password desde Secret
           resources:
             requests:
-              cpu: {{ .Values.app.resources.requests.cpu }}
-              memory: {{ .Values.app.resources.requests.memory }}
+              cpu: {{ .Values.app.resources.requests.cpu }}     # CPU solicitado para el contenedor
+              memory: {{ .Values.app.resources.requests.memory }} # Memoria solicitada
+          # Sondas para verificar inicio y estado de la aplicación
           startupProbe:
             httpGet:
-              path: /api/users
+              path: /api/users   # Ruta usada para comprobar que la app arrancó correctamente
               port: {{ .Values.app.port }}
             initialDelaySeconds: 5
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /api/users
-              port: {{ .Values.app.port }}
-            periodSeconds: 10
+              path: /api/users   # Ruta usada para determinar si la app está lista para recibir tráfico
+              port: {{ .Values.app.port

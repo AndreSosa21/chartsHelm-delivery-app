@@ -1,12 +1,13 @@
+# Solo crea el PVC si la persistencia está habilitada y no existe un claim previo
 {{- if and .Values.global.db.persistence.enabled (not .Values.global.db.persistence.existingClaim) }}
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: PersistentVolumeClaim  # Tipo de recurso: Reclamo de Volumen Persistente
 metadata:
-  name: {{ .Values.global.db.persistence.name }}
+  name: {{ .Values.global.db.persistence.name }}  # Nombre del PVC, tomado de los valores globales
 spec:
-  accessModes: {{ toYaml .Values.global.db.persistence.accessModes | nindent 2 }}
+  accessModes: {{ toYaml .Values.global.db.persistence.accessModes | nindent 2 }}  # Modos de acceso (por ejemplo, ReadWriteOnce)
   resources:
     requests:
-      storage: {{ .Values.global.db.persistence.size }}
-  storageClassName: {{ .Values.global.db.persistence.storageClass }}
+      storage: {{ .Values.global.db.persistence.size }}  # Tamaño solicitado para el almacenamiento
+  storageClassName: {{ .Values.global.db.persistence.storageClass }}  # Clase de almacenamiento a usar
 {{- end }}

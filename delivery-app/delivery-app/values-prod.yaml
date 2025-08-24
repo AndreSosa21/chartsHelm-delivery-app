@@ -1,22 +1,23 @@
+# Valores para el entorno de producción (overrides para Helm)
 app:
-  name: delivery
-  namespace: delivery-app-prod
+  name: delivery                         # Nombre de la aplicación usado en recursos Kubernetes
+  namespace: delivery-app-prod           # Namespace donde se desplegará en producción
   image:
-    repository: andrea233/delivery-system
-    tag: "2.5.0"
-  replicas: 4
-  port: 3000
+    repository: andrea233/delivery-system  # Repositorio de la imagen Docker de la aplicación
+    tag: "2.5.0"                         # Tag de la imagen en producción (versión estable)
+  replicas: 4                            # Número de réplicas para alta disponibilidad en prod
+  port: 3000                             # Puerto interno donde escucha la aplicación dentro del contenedor
   service:
-    port: 80
+    port: 80                             # Puerto expuesto por el Service dentro del clúster
   ingress:
-    enabled: true
-    className: nginx
-    host: "delivery-app.local"
-    apiPath: /api(/|$)(.*)
-    frontendPath: /delivery(/|$)(.*)
+    enabled: true                        # Habilita la creación del Ingress para acceso externo
+    className: nginx                     # Clase/controlador de Ingress a usar (ej. nginx)
+    host: "delivery-app.local"           # Dominio que atenderá el Ingress (configurar DNS/Hosts)
+    apiPath: /api(/|$)(.*)               # Ruta/regex para enrutar tráfico a la API del backend
+    frontendPath: /delivery(/|$)(.*)     # Ruta/regex para enrutar tráfico al frontend
   resources:
     requests:
-      cpu: "200m"
-      memory: "1Gi"
+      cpu: "200m"                        # CPU solicitado por pod (reserva mínima)
+      memory: "1Gi"                      # Memoria solicitada por pod
 
-global: {}
+global: {}                               # Valores globales / subcharts (vacío por defecto; personalizar)

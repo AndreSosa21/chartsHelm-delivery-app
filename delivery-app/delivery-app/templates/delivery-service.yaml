@@ -1,21 +1,23 @@
-apiVersion: v1
-kind: Service
+# ...existing code...
+apiVersion: v1  # Versión de la API de Kubernetes para Services
+kind: Service   # Tipo de recurso: Service
 metadata:
-  name: {{ .Values.app.name }}
-  namespace: {{ .Values.app.namespace }}
+  name: {{ .Values.app.name }}            # Nombre del Service (desde values.yaml)
+  namespace: {{ .Values.app.namespace }}  # Namespace donde se crea el Service
   labels:
     {{- with .Values.global.labels }}
-    {{ toYaml . | nindent 4 }}
+    {{ toYaml . | nindent 4 }}            # Etiquetas globales opcionales (añadidas desde values)
     {{- end }}
   annotations:
     {{- with .Values.global.annotations }}
-    {{ toYaml . | nindent 4 }}
+    {{ toYaml . | nindent 4 }}            # Anotaciones globales opcionales (ej. para controladores/cloud)
     {{- end }}
 spec:
-  type: ClusterIP
+  type: ClusterIP  # Tipo de Service: ClusterIP (expuesto solo dentro del clúster). Cambiar a NodePort/LoadBalancer si se quiere acceso externo.
   selector:
-    app: {{ .Values.app.name }}
+    app: {{ .Values.app.name }}           # Selecciona los pods cuyo label 'app' coincide (apunta al Deployment)
   ports:
-    - protocol: TCP
-      port: {{ .Values.app.service.port }}
-      targetPort: {{ .Values.app.port }}
+    - protocol: TCP                       # Protocolo de transporte (MySQL/HTTP suelen usar TCP)
+      port: {{ .Values.app.service.port }}    # Puerto expuesto por el Service dentro del clúster
+      targetPort: {{ .Values.app.port }}      # Puerto en el contenedor al que se enruta el tráfico
+#

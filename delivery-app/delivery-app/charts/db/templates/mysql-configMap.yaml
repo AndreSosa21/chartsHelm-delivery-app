@@ -1,8 +1,16 @@
+# Define el tipo de recurso como ConfigMap de Kubernetes
 apiVersion: v1
 kind: ConfigMap
+
+# Metadatos del ConfigMap, incluyendo el nombre que se obtiene de los valores globales de Helm
 metadata:
   name: {{ .Values.global.db.configMap.name }}
+
+# Datos de configuración que se almacenarán en el ConfigMap
 data:
+  # Dirección del host de la base de datos, tomada de los valores globales
   DB_HOST: "{{ .Values.global.db.configMap.host }}"
+  # Puerto de la base de datos, tomado de los valores globales
   DB_PORT: "{{ .Values.global.db.configMap.port }}"
-  DB_NAME: "{{ .Values.global.db.configMap.dbName }}"
+  # Nombre de la base de datos, tomado de los valores globales
+  DB_NAME: "{{

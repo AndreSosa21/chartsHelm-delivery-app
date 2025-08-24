@@ -21,59 +21,49 @@ spec:
       labels:
         app: {{ .Values.app.name }}
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for database..."
+              until nc -z {{ .Values.global.db.configMap.host }} {{ .Values.global.db.configMap.port }}; do
+                echo "DB not ready, sleeping 2s"
+                sleep 2
+              done
+              echo "Database is up!"
       containers:
-      - name: {{ .Values.app.name }}
-        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
-        ports:
-          - containerPort: {{ .Values.app.port }}
-        env:
-          
-          - name: DB_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.global.db.configMap.name }}
-                key: DB_HOST
-          - name: DB_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.global.db.configMap.name }}
-                key: DB_PORT
-          - name: DB_NAME
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.global.db.configMap.name }}
-                key: DB_NAME
-
-          - name: MYSQL_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.global.db.secretName }}
-                key: MYSQL_ROOT_PASSWORD
-          
-          - name: DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.global.db.secretName }}
-                key: DB_USER
-          
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.global.db.secretName }}
-                key: DB_PASSWORD
-          
-        resources:
-          requests:
-            cpu: {{ .Values.app.resources.requests.cpu }}
-            memory: {{ .Values.app.resources.requests.memory }}
-        startupProbe:
-          httpGet:
-            path: /api/users
-            port: {{ .Values.app.port }}
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /api/users
-            port: {{ .Values.app.port }}
-          periodSeconds: 10
+        - name: {{ .Values.app.name }}
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.app.port }}
+          env:
+            - name: DB_HOST
+              value: {{ .Values.global.db.configMap.host }}
+            - name: DB_PORT
+              value: {{ .Values.global.db.configMap.port }}
+            - name: DB_NAME
+              value: {{ .Values.global.db.configMap.dbName }}
+            - name: DB_USER
+              value: {{ .Values.global.db.secret.dbUser }}
+            - name: DB_PASSWORD
+              value: {{ .Values.global.db.secret.dbPassword }}
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.global.db.secret.rootPassword }}
+          resources:
+            requests:
+              cpu: {{ .Values.app.resources.requests.cpu }}
+              memory: {{ .Values.app.resources.requests.memory }}
+          startupProbe:
+            httpGet:
+              path: /api/users
+              port: {{ .Values.app.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/users
+              port: {{ .Values.app.port }}
+            periodSeconds: 10

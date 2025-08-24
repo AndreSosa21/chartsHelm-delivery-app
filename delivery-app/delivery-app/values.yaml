@@ -1,6 +1,6 @@
 app:
   name: delivery
-  namespace: delivery-app-dev
+  namespace: delivery-app
   image:
     repository: andrea233/delivery-system
     tag: "2.5.0"
@@ -57,6 +57,6 @@ global:
 
     service:
       name: delivery-db-service
-      port: "3306"
+      port: 3306
       targetPort: 3306
       type: ClusterIP

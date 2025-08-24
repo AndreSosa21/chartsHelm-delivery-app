@@ -81,7 +81,6 @@ app:
   ingress:
     enabled: true                          # Habilita la creación del Ingress (true/false)
     className: nginx                       # Clase/controlador de Ingress a usar (ej. nginx)
-    host: "delivery-app.local"             # Dominio/host que atenderá el Ingress
     apiPath: /api(/|$)(.*)                 # Ruta/regex para enrutar tráfico a la API del backend
     frontendPath: /delivery(/|$)(.*)       # Ruta/regex para enrutar tráfico al frontend  
   resources:
